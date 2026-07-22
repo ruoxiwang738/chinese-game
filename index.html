@@ -8,7 +8,6 @@
 <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
 <style>
-@font-face{font-family:'FZKai';src:url('FZKai.ttf') format('truetype');font-display:swap;}
 :root{
   --rose:#FF8FAB;--rose-light:#FFCCD8;--rose-dark:#E0607A;
   --yellow:#FFD166;--yellow-light:#FFF0B3;--yellow-dark:#E8B84B;
@@ -21,7 +20,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Sarabun',sans-serif;background:var(--bg);min-height:100vh;overflow-x:hidden;}
-.zh{font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei','FZKai',sans-serif;}
+.zh{font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;}
 .screen{display:none;min-height:100vh;flex-direction:column;align-items:center;}
 .screen.active{display:flex;}
 .btn{border:none;cursor:pointer;font-family:'Sarabun',sans-serif;font-weight:700;border-radius:20px;transition:all .16s;outline:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;letter-spacing:.3px;}
@@ -65,13 +64,13 @@ input[type=text]:focus{border-color:var(--rose);}
 .nav-back{background:none;border:none;font-size:26px;cursor:pointer;padding:2px 8px;color:var(--rose);font-weight:700;line-height:1;}
 /* drag-drop */
 .word-bank{display:flex;flex-wrap:wrap;gap:10px;padding:14px;background:var(--rose-light);border-radius:18px;min-height:56px;align-items:flex-start;}
-.drag-word{background:#fff;border:2.5px solid var(--rose);border-radius:14px;padding:8px 16px;font-size:24px;cursor:grab;user-select:none;touch-action:none;font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei','FZKai',sans-serif;color:var(--text);box-shadow:0 3px 0 var(--rose-light);transition:opacity .15s;}
+.drag-word{background:#fff;border:2.5px solid var(--rose);border-radius:14px;padding:8px 16px;font-size:24px;cursor:grab;user-select:none;touch-action:none;font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;color:var(--text);box-shadow:0 3px 0 var(--rose-light);transition:opacity .15s;}
 .drag-word:active{cursor:grabbing;}
 .drag-word.dragging{opacity:.3;}
 .drag-word.used{opacity:.25;pointer-events:none;}
 .drop-zone{display:flex;flex-wrap:wrap;gap:8px;min-height:56px;background:var(--bg);border:2.5px dashed var(--rose);border-radius:18px;padding:10px;align-items:center;transition:background .18s;}
 .drop-zone.drag-over{background:var(--rose-light);}
-.dropped-word{background:var(--rose);color:#fff;border-radius:12px;padding:6px 14px;font-size:22px;cursor:pointer;font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei','FZKai',sans-serif;animation:popIn .18s;box-shadow:0 2px 0 var(--rose-dark);}
+.dropped-word{background:var(--rose);color:#fff;border-radius:12px;padding:6px 14px;font-size:22px;cursor:pointer;font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;animation:popIn .18s;box-shadow:0 2px 0 var(--rose-dark);}
 /* writing */
 #writer-target,#stroke-demo{display:inline-block;border-radius:16px;background:#FFFBF5;border:2.5px solid var(--rose-light);}
 /* speaking */
@@ -87,7 +86,7 @@ input[type=text]:focus{border-color:var(--rose);}
 .comp-char.ok{border-color:var(--success);background:#E8F5E9;}
 .comp-char.bad{border-color:var(--error);background:#FFEBEE;}
 .comp-char.miss{border-color:#B0BEC5;background:#ECEFF1;opacity:.7;}
-.comp-char .zh-c{font-size:26px;font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei','FZKai',sans-serif;line-height:1.2;}
+.comp-char .zh-c{font-size:26px;font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;line-height:1.2;}
 .comp-char .pin{font-size:10px;color:#888;font-style:italic;margin-top:2px;}
 .comp-char .icon{font-size:12px;}
 /* leaderboard */
@@ -503,8 +502,10 @@ function getBestZhVoice(){
   for(const p of prefs){const f=voices.find(x=>x.name.includes(p));if(f)return f;}
   return voices.find(v=>v.lang==='zh-CN')||voices.find(v=>v.lang.startsWith('zh'))||null;
 }
-let _sfx=null; // persistent ref so iOS doesn't GC the audio mid-load
+const _isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+let _sfx=null;
 function speak(text,rate=0.82){
+  if(_isMobile){speakWS(text,rate);return;}
   if(_sfx){_sfx.oncanplay=null;_sfx.onerror=null;_sfx.onplaying=null;try{_sfx.pause();}catch(e){}}
   const url=`https://translate.googleapis.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=zh-CN&client=gtx`;
   const a=new Audio();_sfx=a;
@@ -527,6 +528,7 @@ function speakWS(text,rate=0.82){
   speechSynthesis.speak(u);
 }
 function speakSlow(text){
+  if(_isMobile){speakWS(text,0.5);return;}
   if(_sfx){_sfx.oncanplay=null;_sfx.onerror=null;_sfx.onplaying=null;try{_sfx.pause();}catch(e){}}
   const url=`https://translate.googleapis.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=zh-CN&client=gtx`;
   const a=new Audio();_sfx=a;
@@ -996,17 +998,7 @@ function checkListening(btn,answer){
     L.firstTry=false;
     playSound('wrong');mascotReact('wrong');
     const dv=describeWrongOpt(btn.dataset.opt, q.type==='hear2zh'?'thai2zh':'zh2thai');
-    let correctHint='';
-    if(q.type==='hear2zh'){
-      const cv=VOCAB.find(v=>v.hanzi===q.answer);
-      if(cv)correctHint=`<div style="margin-top:6px;padding:6px 10px;background:rgba(255,255,255,.6);border-radius:10px;font-size:13px;">✅ คำที่ถูก: <span class="zh" style="font-size:20px;">${cv.hanzi}</span> <em style="color:var(--lavender-dark);">${cv.pinyin}</em> = ${cv.thai}</div>`;
-    } else if(q.type==='hear2thai'){
-      const cv=VOCAB.find(v=>v.thai===q.answer);
-      if(cv)correctHint=`<div style="margin-top:6px;padding:6px 10px;background:rgba(255,255,255,.6);border-radius:10px;font-size:13px;">✅ คำที่ถูก: "${q.answer}" = <span class="zh" style="font-size:18px;">${cv.hanzi}</span> <em style="color:var(--lavender-dark);">${cv.pinyin}</em></div>`;
-    } else if(q.type==='hear-sent'){
-      correctHint=`<div style="margin-top:6px;padding:6px 10px;background:rgba(255,255,255,.6);border-radius:10px;font-size:13px;">✅ ความหมายที่ถูก: "${q.answer}"</div>`;
-    }
-    fb.innerHTML=`<div class="feedback-box error">❌ คุณเลือก: ${dv||`"${esc(btn.dataset.opt)}"`}<br><span style="font-size:13px;opacity:.8">ลองฟังอีกครั้งแล้วเลือกใหม่！</span>${correctHint}</div>`;
+    fb.innerHTML=`<div class="feedback-box error">❌ คุณเลือก: ${dv||`"${esc(btn.dataset.opt)}"`}<br><span style="font-size:13px;opacity:.8">ลองฟังอีกครั้งแล้วเลือกใหม่！</span></div>`;
   }
 }
 function nextListeningQ(){L.step++;showListeningQ();}
