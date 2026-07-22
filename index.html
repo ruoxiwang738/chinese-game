@@ -6,7 +6,7 @@
 <title>เรียนภาษาจีนกับ小美！</title>
 <link rel="icon" type="image/png" href="chinese-game-character.png">
 <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
 <style>
 @font-face{font-family:'FZKai';src:url('FZKai.ttf') format('truetype');font-display:swap;}
 :root{
@@ -506,12 +506,19 @@ function getBestZhVoice(){
 function speak(text,rate=0.82){
   const url=`https://translate.googleapis.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=zh-CN&client=gtx`;
   const a=new Audio();
-  a.onerror=()=>speakWS(text,rate);
+  let done=false;
+  const fallback=()=>{if(done)return;done=true;a.src='';speakWS(text,rate);};
+  const ok=()=>{done=true;clearTimeout(t);};
+  const t=setTimeout(fallback,2500);
+  a.onerror=fallback;
+  a.oncanplay=ok;
+  a.onplaying=ok;
   a.src=url;
-  a.play().catch(()=>speakWS(text,rate));
+  a.play().catch(fallback);
 }
 function speakWS(text,rate=0.82){
   speechSynthesis.cancel();
+  if(!voices.length)loadVoices();
   const u=new SpeechSynthesisUtterance(text);
   u.lang='zh-CN';u.rate=rate;u.pitch=1.1;
   const v=getBestZhVoice();if(v)u.voice=v;
@@ -520,11 +527,15 @@ function speakWS(text,rate=0.82){
 function speakSlow(text){
   const url=`https://translate.googleapis.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=zh-CN&client=gtx`;
   const a=new Audio();
-  a.playbackRate=0.65;
-  a.onerror=()=>speakWS(text,0.5);
-  a.oncanplay=()=>{a.playbackRate=0.65;};
+  let done=false;
+  const fallback=()=>{if(done)return;done=true;a.src='';speakWS(text,0.5);};
+  const ok=()=>{done=true;clearTimeout(t);a.playbackRate=0.65;};
+  const t=setTimeout(fallback,2500);
+  a.onerror=fallback;
+  a.oncanplay=ok;
+  a.onplaying=ok;
   a.src=url;
-  a.play().catch(()=>speakWS(text,0.5));
+  a.play().catch(fallback);
 }
 
 // ════════════════════════════════════════
