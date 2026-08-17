@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reading test in progress</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="exam">
+
+<header class="exam-header">
+  <div class="exam-title">
+    <span id="hdr-test">Academic Reading</span>
+    <small id="hdr-student"></small>
+  </div>
+  <div class="spacer"></div>
+  <div class="timer" id="timer"><span class="dot"></span><span id="timer-text">60:00</span></div>
+  <div class="spacer"></div>
+  <button class="btn btn-sm" id="hl-clear" title="Remove all highlighting">Clear highlights</button>
+  <button class="btn btn-sm btn-primary" id="finish-btn">Finish test</button>
+</header>
+
+<div class="exam-body">
+  <div class="pane pane-passage" id="pane-passage"></div>
+  <div class="pane pane-questions" id="pane-questions"></div>
+</div>
+
+<footer class="exam-footer" id="footer"></footer>
+
+<button id="hl-btn">Highlight</button>
+
+<div id="modal-root"></div>
+
+<script src="assets/vendor/supabase.js"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/core.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/exam.js"></script>
+</body>
+</html>

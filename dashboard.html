@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teacher dashboard | Language by Yok</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">Language by <span>Yok</span><small>Teacher dashboard</small></a>
+    <div class="spacer"></div>
+    <span class="small muted" id="who"></span>
+    <button class="btn btn-sm hidden" id="signout">Sign out</button>
+  </div>
+</header>
+
+<main class="wrap" style="padding-top:30px;padding-bottom:70px">
+
+  <!-- login -->
+  <section id="login" class="wrap-slim hidden" style="padding:0">
+    <h1>Teacher sign-in</h1>
+    <div class="card">
+      <form id="login-form">
+        <label class="field"><span>Email</span><input type="email" id="email" required autocomplete="username"></label>
+        <label class="field"><span>Password</span><input type="password" id="password" required autocomplete="current-password"></label>
+        <div id="login-error" class="notice notice-error hidden" style="margin-bottom:14px"></div>
+        <button class="btn btn-primary" style="width:100%">Sign in</button>
+      </form>
+      <p class="hint">Create this account in Supabase → Authentication → Users. Keep public sign-ups turned off.</p>
+    </div>
+  </section>
+
+  <div id="not-configured" class="card hidden">
+    <h2>Database not connected</h2>
+    <p class="dim">Add your Supabase URL and anon key to <code>assets/js/config.js</code>, then reload.
+       Until then the site runs in practice mode and nothing is recorded centrally.</p>
+  </div>
+
+  <!-- app -->
+  <section id="app" class="hidden">
+    <div class="tabs">
+      <button data-tab="overview" class="on">Class overview</button>
+      <button data-tab="students">Students</button>
+      <button data-tab="attempts">All attempts</button>
+    </div>
+    <div id="view"></div>
+  </section>
+
+  <div id="loading" class="card center dim">Checking your session…</div>
+</main>
+
+<script src="assets/vendor/supabase.js"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/core.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/analysis.js"></script>
+<script src="assets/js/report.js"></script>
+<script src="assets/js/dashboard.js"></script>
+</body>
+</html>
