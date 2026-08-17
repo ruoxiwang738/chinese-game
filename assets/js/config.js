@@ -20,8 +20,8 @@
    ============================================================================= */
 
 window.IELTS_CONFIG = {
-  SUPABASE_URL: '',        // e.g. 'https://abcdefghijkl.supabase.co'
-  SUPABASE_ANON_KEY: '',   // the publishable (or anon public) key
+  SUPABASE_URL: 'https://unipcpxljneweaijialu.supabase.co/rest/v1/',        // e.g. 'https://abcdefghijkl.supabase.co'
+  SUPABASE_ANON_KEY: 'sb_publishable_sR0VRY7cZ9Rez2PTVzSlew_b5KKDcW9',   // the publishable (or anon public) key
 
   // Shown in the header and on the results page.
   SITE_NAME: 'Language by Yok',
